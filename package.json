@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "test",
-    "start": "nodemon start.js"
+    "server": "nodemon start.js",
+    "start": "concurrently \"npm run server\" \"cd client && npm start\" "
   },
   "repository": {
     "type": "git",
@@ -16,5 +17,12 @@
   "bugs": {
     "url": "https://github.com/jessicasalmon/support-wheel-of-fate/issues"
   },
-  "homepage": "https://github.com/jessicasalmon/support-wheel-of-fate#readme"
+  "homepage": "https://github.com/jessicasalmon/support-wheel-of-fate#readme",
+  "devDependencies": {
+    "concurrently": "^3.5.1"
+  },
+  "dependencies": {
+    "express": "^4.16.2",
+    "nodemon": "^1.14.7"
+  }
 }
