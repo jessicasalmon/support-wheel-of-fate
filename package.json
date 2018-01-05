@@ -1,0 +1,20 @@
+{
+  "name": "support-wheel-of-fate",
+  "version": "1.0.0",
+  "description": "evenly allocate an engineer to support roles",
+  "main": "server.js",
+  "scripts": {
+    "test": "test",
+    "start": "nodemon start.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jessicasalmon/support-wheel-of-fate.git"
+  },
+  "author": "Jessica Salmon",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jessicasalmon/support-wheel-of-fate/issues"
+  },
+  "homepage": "https://github.com/jessicasalmon/support-wheel-of-fate#readme"
+}
