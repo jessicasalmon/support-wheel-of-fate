@@ -4,9 +4,13 @@
   "description": "evenly allocate an engineer to support roles",
   "main": "server.js",
   "scripts": {
+    "start-server": "nodemon start.js",
+    "start-client": "NODE_PATH=src/ react-scripts start",
+    "start": "concurrently \"npm run start-server\" \"npm run start-client\" ",
     "test": "test",
-    "server": "nodemon start.js",
-    "start": "concurrently \"npm run server\" \"cd client && npm start\" "
+    "test-client": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "build": "react-scripts build"
   },
   "repository": {
     "type": "git",
@@ -23,6 +27,10 @@
   },
   "dependencies": {
     "express": "^4.16.2",
-    "nodemon": "^1.14.7"
-  }
+    "nodemon": "^1.14.7",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-scripts": "1.0.17"
+  },
+  "proxy": "http://localhost:4000/"
 }
