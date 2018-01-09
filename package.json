@@ -7,8 +7,9 @@
     "start-server": "nodemon start.js",
     "start-client": "NODE_PATH=src/ react-scripts start",
     "start": "concurrently \"npm run start-server\" \"npm run start-client\" ",
-    "test": "test",
+    "test-backend": "node test/runner.js | tap-spec",
     "test-client": "react-scripts test --env=jsdom",
+    "test": "",
     "build-test-database": "NODE_ENV=test node database/build/db_build.js",
     "eject": "react-scripts eject",
     "build": "react-scripts build"
@@ -24,7 +25,9 @@
   },
   "homepage": "https://github.com/jessicasalmon/support-wheel-of-fate#readme",
   "devDependencies": {
-    "concurrently": "^3.5.1"
+    "concurrently": "^3.5.1",
+    "tape": "^4.8.0",
+    "tap-spec": "^4.1.1"
   },
   "dependencies": {
     "express": "^4.16.2",
