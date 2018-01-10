@@ -2,15 +2,18 @@ import React, { Component } from 'react';
 import './App.css';
 
 class App extends Component {
-  // tests can set the state to various things and then check that the function DOES NOT return those values
-  constructor(props) {
 
+  // rules:
+  // 1. can't work if worked yesterday
+  // 2. can't work if they are in shiftLimitReached array
+  // 3. can't work if they worked already today
+
+  constructor(props) {
     super(props);
 
     this.state = {
      shiftYesterday: ['Malinda Mannion', 'Myrtice Manfre', 'Madge Mcginty', 'Madlyn Moncada'], //expect to see no Ms
      shiftToday: [],
-     // shiftLimitReached: [],
      engineers: [
        { name: 'Malinda Mannion', shiftsWorked: 0},
        { name: 'Bud Bjork', shiftsWorked: 0},
@@ -23,73 +26,82 @@ class App extends Component {
        { name: 'Assunta Austin', shiftsWorked: 0},
        { name: 'Madlyn Moncada', shiftsWorked: 0}
      ]
-
     }
   }
 
-  render() {
-    // done:
-    // 1. can't work if worked yesterday
-    // 2. can't work if they are in shiftLimitReached array
-    // refine pool of eligible engineers based on the rules
-    // 3. can't work if they worked already today (introduce second person selection here)
+   eligibleEngineers = () => {
+    const allEngineers = this.state.engineers;
 
-// TODO make sure the funcion only runs once a day
-// TODO at the beginning of the function, push those who arein worked todayc state into worked Yesterday state (e.g. only if it's length is two)
-
-
-    const eligibleEngineers = () => {
-      const allEngineers = this.state.engineers;
-
-      const meetsCriteria = (engineer) => {
-        const rules = !this.state.shiftYesterday.includes(engineer.name) && engineer.shiftsWorked < 2;
-        return rules;
-      }
-
-      console.log(allEngineers.filter(meetsCriteria), 'eligible engineers');
-      return allEngineers.filter(meetsCriteria);
+    const meetsCriteria = (engineer) => {
+      const rules = !this.state.shiftYesterday.includes(engineer.name) && engineer.shiftsWorked < 2;
+      return rules;
     }
 
-    const selectTodaysEngineers = () => {
-      const engineersObj = eligibleEngineers();
-      const engineers = engineersObj.map(engineer => {
-        return engineer.name
+    return allEngineers.filter(meetsCriteria);
+  }
+
+   selectTodaysEngineers = () => {
+    const eligibleEngineersList = this.eligibleEngineers();
+    let engineers = eligibleEngineersList.map(engineer => {
+      return engineer.name
+    });
+    let engineersObj = this.state.engineers;
+
+    let shifts = {
+      morning: null,
+      afternoon: null
+    }
+
+    let selectFirstEngineer = engineers[Math.floor(Math.random() * engineers.length)]
+    shifts.morning = selectFirstEngineer;
+
+    if(shifts.morning) {
+      // remove that key from the engineers array
+      const morningEng = engineers.indexOf(shifts.morning);
+      if (morningEng !== -1) {
+        engineers.splice(morningEng, 1)
+      }
+      // then run the function again and assign to shifts.afernoon
+      let selectSecondEngineer = engineers[Math.floor(Math.random() * engineers.length)];
+      shifts.afternoon = selectSecondEngineer;
+    }
+
+    // update the shifts for morning and afernoon
+    if (shifts.morning !== '' && shifts.afternoon !== '') {
+      Object.keys(engineersObj).forEach((key) => {
+        if(engineersObj[key].name === shifts.morning) {
+          engineersObj[key].shiftsWorked += 1;
+        }
+        if (engineersObj[key].name === shifts.afternoon) {
+          engineersObj[key].shiftsWorked += 1;
+        }
       });
-      const updatedEngineersObj = this.state.engineers;
+    };
 
-      const shifts = {
-        morningEngineer: null,
-        afternoonEngineer: null
-      }
+    console.log(engineersObj, 'my eng obj');
 
-      shifts.morningEngineer = engineers[Math.floor(Math.random() * engineers.length)];
-      let randomEngineer = engineers[Math.floor(Math.random() * engineers.length)];
-      randomEngineer !== shifts.morningEngineer ? shifts.afternoonEngineer = randomEngineer : randomEngineer;
+    let shiftsTodayCopy = [];
+    shiftsTodayCopy.push(shifts.morning);
+    shiftsTodayCopy.push(shifts.afternoon);
 
+    this.setState({
+      engineers: engineersObj,
+      shiftToday: shiftsTodayCopy
+    });
 
-      if (shifts.morningEngineer !== '') {
-        Object.keys(updatedEngineersObj).forEach((key) => {
-          if(updatedEngineersObj[key].name === shifts.morningEngineer) {
-            updatedEngineersObj[key].shiftsWorked += 1;
-          }
-        });
-      };
+    return shifts;
+  }
 
-      console.log(updatedEngineersObj, 'updated obj after pushing new count')
-
-      console.log(shifts, 'shifts');
-      return shifts; //perhaps return an object with moring/ evening key
-
-    }
-
+  render() {
+    console.log(this.state, 'state');
     return (
 
       <div className="app-container">
-        <p>testing</p>
-        {console.log(selectTodaysEngineers(), 'called')}
-        {console.log(selectTodaysEngineers().morningEngineer, 'called')}
-        {console.log(selectTodaysEngineers().afternoonEngineer, 'called')}
-        <p></p>
+        <p>{this.state.shiftToday[0]}</p>
+        <p>{this.state.shiftToday[1]}</p>
+        <div
+        onClick={() => this.selectTodaysEngineers()}
+        style={{backgroundColor: "pink", padding: "1em", width: "50%"}}>Assign Engineers</div>
       </div>
     );
   }
