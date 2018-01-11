@@ -1,46 +1,45 @@
 import React, { Component } from 'react';
 import './App.css';
+import getEngineers from './requests/getEngineers.js';
+import updateEngineers from './requests/updateEngineers.js';
 
 class App extends Component {
-
-  // rules:
-  // 1. can't work if worked yesterday
-  // 2. can't work if they are in shiftLimitReached array
-  // 3. can't work if they worked already today
 
   constructor(props) {
     super(props);
 
     this.state = {
-     shiftYesterday: ['Malinda Mannion', 'Myrtice Manfre', 'Madge Mcginty', 'Madlyn Moncada'], //expect to see no Ms
-     shiftToday: [],
-     engineers: [
-       { name: 'Malinda Mannion', shiftsWorked: 0},
-       { name: 'Bud Bjork', shiftsWorked: 0},
-       { name: 'Jarrett Jett', shiftsWorked: 0},
-       { name: 'Cassaundra Couts', shiftsWorked: 0},
-       { name: 'Ashli Applebee', shiftsWorked: 0},
-       { name: 'Myrtice Manfre', shiftsWorked: 0},
-       { name: 'Eugenie Etherton', shiftsWorked: 0},
-       { name: 'Madge Mcginty', shiftsWorked: 0},
-       { name: 'Assunta Austin', shiftsWorked: 0},
-       { name: 'Madlyn Moncada', shiftsWorked: 0}
-     ]
+     shiftYesterday: [], // remeber to sync up with db & implement logic
+     shiftToday: [], // ""
+     engineers: []
     }
+  };
+
+  componentDidMount() {
+    // set state to be same as in database
+    getEngineers.then((data) => {
+      this.setState({
+        engineers: data
+      });
+      console.log(this.state.engineers, 'my state engs')
+    })
+    .catch((err) => {
+      console.log(err, 'error occured whilst fetching data')
+    });
   }
 
-   eligibleEngineers = () => {
+  eligibleEngineers = () => {
     const allEngineers = this.state.engineers;
 
     const meetsCriteria = (engineer) => {
-      const rules = !this.state.shiftYesterday.includes(engineer.name) && engineer.shiftsWorked < 2;
+      const rules = !this.state.shiftYesterday.includes(engineer.name) && engineer.shifts_worked < 2;
       return rules;
     }
-
+    
     return allEngineers.filter(meetsCriteria);
-  }
+  };
 
-   selectTodaysEngineers = () => {
+  selectTodaysEngineers = () => {
     const eligibleEngineersList = this.eligibleEngineers();
     let engineers = eligibleEngineersList.map(engineer => {
       return engineer.name
@@ -66,36 +65,45 @@ class App extends Component {
       shifts.afternoon = selectSecondEngineer;
     }
 
-    // update the shifts for morning and afernoon
+    // update the shifts for morning and afternoon
     if (shifts.morning !== '' && shifts.afternoon !== '') {
       Object.keys(engineersObj).forEach((key) => {
         if(engineersObj[key].name === shifts.morning) {
-          engineersObj[key].shiftsWorked += 1;
+          engineersObj[key].shifts_worked += 1;
         }
         if (engineersObj[key].name === shifts.afternoon) {
-          engineersObj[key].shiftsWorked += 1;
+          engineersObj[key].shifts_worked += 1;
         }
       });
     };
 
-    console.log(engineersObj, 'my eng obj');
 
     let shiftsTodayCopy = [];
     shiftsTodayCopy.push(shifts.morning);
     shiftsTodayCopy.push(shifts.afternoon);
 
+    console.log(engineersObj, 'my eng obj. These items should go in the state after');
+    // console.log(shiftsTodayCopy, 'shifts today copy');
+
     this.setState({
       engineers: engineersObj,
       shiftToday: shiftsTodayCopy
+    }, () => {
+      this.updateDBEngineers();
     });
+  }
 
-    return shifts;
+  updateDBEngineers = () => {
+    console.log('it updated');
+
+    let myParam = this.state.engineers;
+    console.log(myParam, 'my state after updating it')
+    updateEngineers(myParam);
   }
 
   render() {
-    console.log(this.state, 'state');
+    console.log(this.state.engineers, 'engineers in state')
     return (
-
       <div className="app-container">
         <p>{this.state.shiftToday[0]}</p>
         <p>{this.state.shiftToday[1]}</p>
