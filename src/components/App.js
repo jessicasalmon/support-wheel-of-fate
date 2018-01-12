@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import './App.css';
-import getEngineers from './requests/getEngineers.js';
-import updateEngineers from './requests/updateEngineers.js';
+import '../App.css';
+import getEngineers from '../requests/getEngineers.js';
+import updateEngineers from '../requests/updateEngineers.js';
 
 class App extends Component {
 
@@ -9,7 +9,7 @@ class App extends Component {
     super(props);
 
     this.state = {
-     shiftYesterday: [], // remeber to sync up with db & implement logic
+     shiftYesterday: [], // remeber to sync up with db
      shiftToday: [],
      engineers: []
     }
@@ -20,10 +20,7 @@ class App extends Component {
     getEngineers.then((data) => {
       this.setState({
         engineers: data
-      }, () => {
-        console.log('you been triggerd')
-      });
-      console.log(this.state.engineers, 'my state engs')
+      })
     })
     .catch((err) => {
       console.log(err, 'error occured whilst fetching data')
@@ -31,29 +28,17 @@ class App extends Component {
   }
 
   eligibleEngineers = (allEngineers) => {
-    // if not everyone has 1, then eligible engineers are people hwo have 0 shifts worked
-    // if everyone has 1, eliible ejngineers are people who have 1 shift of work
     const newShiftYesterday = this.state.shiftToday;
 
-    console.log(allEngineers, 'all Engineers')
-    const isFirstWeek = (engineer) => {
-      return engineer.shifts_worked < 1;
-    }
-
-    const shiftLimitsReached = (engineer) => {
-      return engineer.shifts_worked == 2;
-    }
-
     let meetsCriteria;
-
-    if (allEngineers.some(isFirstWeek)) {
+    // if some engineers worked less than one shift, select from that pool
+    if (allEngineers.some(eng => eng.shifts_worked < 1)) {
       meetsCriteria = (engineer) => {
         const rules = !newShiftYesterday.includes(engineer.name) && engineer.shifts_worked < 1;
         return rules;
       }
-    }
-    else if(allEngineers.every(shiftLimitsReached)) {
-      console.log('all 2');
+    } // all engineers reached the 2 shift limit, reset the shifts_worked count
+    else if(allEngineers.every(eng => eng.shifts_worked === 2)) {
       return allEngineers.map(engineer => {
         engineer.shifts_worked = 0;
         return engineer;
@@ -66,14 +51,12 @@ class App extends Component {
       }
     }
 
-
     return allEngineers.filter(meetsCriteria);
   };
 
   selectTodaysEngineers = () => {
     let eligibleEngineersList = this.eligibleEngineers(this.state.engineers);
 
-    console.log(typeof eligibleEngineersList, 'eligible eng list <<<<');
     let engineers = eligibleEngineersList.map(engineer => {
       return engineer.name
     });
@@ -98,7 +81,6 @@ class App extends Component {
     }
 
     let engineersObj = this.state.engineers.slice(0);
-    console.log(engineersObj, '<<<<');
 
     // update the shifts for morning and afternoon
     if (shifts.morning !== '' && shifts.afternoon !== '') {
@@ -117,24 +99,18 @@ class App extends Component {
     shiftsTodayCopy.push(shifts.morning);
     shiftsTodayCopy.push(shifts.afternoon);
 
-    console.log(engineersObj, 'my eng obj. These items should go in the state after');
-    // console.log(shiftsTodayCopy, 'shifts today copy');
 
     this.setState({
       engineers: engineersObj,
       shiftToday: shiftsTodayCopy
     }, () => {
-      console.log('you been triggerd, update at end')
       this.updateDBEngineers();
     });
   }
 
   updateDBEngineers = () => {
-    console.log('it updated');
-
-    let myParam = this.state.engineers;
-    console.log(myParam, 'my state after updating it')
-    updateEngineers(myParam);
+    let updatedEngineers = this.state.engineers;
+    updateEngineers(updatedEngineers);
   }
 
   render() {
