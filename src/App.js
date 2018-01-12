@@ -10,7 +10,7 @@ class App extends Component {
 
     this.state = {
      shiftYesterday: [], // remeber to sync up with db & implement logic
-     shiftToday: [], // ""
+     shiftToday: [],
      engineers: []
     }
   };
@@ -20,6 +20,8 @@ class App extends Component {
     getEngineers.then((data) => {
       this.setState({
         engineers: data
+      }, () => {
+        console.log('you been triggerd')
       });
       console.log(this.state.engineers, 'my state engs')
     })
@@ -28,23 +30,53 @@ class App extends Component {
     });
   }
 
-  eligibleEngineers = () => {
-    const allEngineers = this.state.engineers;
+  eligibleEngineers = (allEngineers) => {
+    // if not everyone has 1, then eligible engineers are people hwo have 0 shifts worked
+    // if everyone has 1, eliible ejngineers are people who have 1 shift of work
+    const newShiftYesterday = this.state.shiftToday;
 
-    const meetsCriteria = (engineer) => {
-      const rules = !this.state.shiftYesterday.includes(engineer.name) && engineer.shifts_worked < 2;
-      return rules;
+    console.log(allEngineers, 'all Engineers')
+    const isFirstWeek = (engineer) => {
+      return engineer.shifts_worked < 1;
     }
-    
+
+    const shiftLimitsReached = (engineer) => {
+      return engineer.shifts_worked == 2;
+    }
+
+    let meetsCriteria;
+
+    if (allEngineers.some(isFirstWeek)) {
+      meetsCriteria = (engineer) => {
+        const rules = !newShiftYesterday.includes(engineer.name) && engineer.shifts_worked < 1;
+        return rules;
+      }
+    }
+    else if(allEngineers.every(shiftLimitsReached)) {
+      console.log('all 2');
+      return allEngineers.map(engineer => {
+        engineer.shifts_worked = 0;
+        return engineer;
+      });
+    }
+    else {
+      meetsCriteria = (engineer) => {
+        const rules = !newShiftYesterday.includes(engineer.name) && engineer.shifts_worked < 2;
+        return rules;
+      }
+    }
+
+
     return allEngineers.filter(meetsCriteria);
   };
 
   selectTodaysEngineers = () => {
-    const eligibleEngineersList = this.eligibleEngineers();
+    let eligibleEngineersList = this.eligibleEngineers(this.state.engineers);
+
+    console.log(typeof eligibleEngineersList, 'eligible eng list <<<<');
     let engineers = eligibleEngineersList.map(engineer => {
       return engineer.name
     });
-    let engineersObj = this.state.engineers;
 
     let shifts = {
       morning: null,
@@ -60,17 +92,20 @@ class App extends Component {
       if (morningEng !== -1) {
         engineers.splice(morningEng, 1)
       }
-      // then run the function again and assign to shifts.afernoon
+      // // then run the function again and assign to shifts.afernoon
       let selectSecondEngineer = engineers[Math.floor(Math.random() * engineers.length)];
       shifts.afternoon = selectSecondEngineer;
     }
+
+    let engineersObj = this.state.engineers.slice(0);
+    console.log(engineersObj, '<<<<');
 
     // update the shifts for morning and afternoon
     if (shifts.morning !== '' && shifts.afternoon !== '') {
       Object.keys(engineersObj).forEach((key) => {
         if(engineersObj[key].name === shifts.morning) {
           engineersObj[key].shifts_worked += 1;
-        }
+         }
         if (engineersObj[key].name === shifts.afternoon) {
           engineersObj[key].shifts_worked += 1;
         }
@@ -89,6 +124,7 @@ class App extends Component {
       engineers: engineersObj,
       shiftToday: shiftsTodayCopy
     }, () => {
+      console.log('you been triggerd, update at end')
       this.updateDBEngineers();
     });
   }

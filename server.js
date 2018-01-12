@@ -11,6 +11,7 @@ app.use(bodyParser.json());
 app.get('/engineers', (req, res) => {
   getEngineers((err, engineer) => {
     if(err) {
+      console.log(err, '<<< ERROR')
       return res.status(500).json({
         type: 500,
         message: 'error from server'
@@ -23,6 +24,7 @@ app.get('/engineers', (req, res) => {
 });
 
 app.post('/engineers/update', (req, res) => {
+  console.log('you are in hereeee');
   const engineers = req.body;
   updateEngineers(engineers, (err, response) => {
     if (err) {

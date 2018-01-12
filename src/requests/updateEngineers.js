@@ -14,7 +14,7 @@ const updateEngineers = (engineers) => {
       console.log(res, 'logging the res <<<<');
     })
     .catch((error) => {
-      console.log(error, 'error')
+      console.log('error occurred updating data')
     })
   })
 }

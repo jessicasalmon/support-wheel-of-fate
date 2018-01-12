@@ -7,7 +7,8 @@ const server = request.agent(app);
 
 test('/engineers route should return a status of 200 and correct data', t => {
   t.plan(1);
-  const expected = data.engineers;
+  const expected = 10;
+  // const expected = data.engineers;
 
   server
   .get('/engineers')
@@ -15,12 +16,14 @@ test('/engineers route should return a status of 200 and correct data', t => {
   .expect('Content-Type', /json/)
   .end((err, res) => {
     const actual = res.body;
-
+    console.log(expected, 'expectd <<<<<<<<')
+    console.log(actual, 'actual <<<<<<<<')
     if(err) {
+      console.log(err, 'eng route error <<<')
       t.error(err, 'tested for errors')
     }
     else {
-      t.same(actual, expected, 'Results as expected')
+      t.same(actual.length, expected, 'Results as expected')
     }
   });
 });
