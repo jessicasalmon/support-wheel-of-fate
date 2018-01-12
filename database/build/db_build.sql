@@ -3,25 +3,23 @@ BEGIN;
 DROP TABLE IF EXISTS engineers CASCADE;
 
 CREATE TABLE engineers (
-  id                    SERIAL       PRIMARY KEY,
-  full_name             VARCHAR                 ,
-  worked_yesterday      BOOLEAN                 ,
-  worked_today          BOOLEAN                 ,
-  workingLimitReached   BOOLEAN
+  id                    SERIAL,
+name                    VARCHAR     PRIMARY KEY     UNIQUE,
+  shifts_worked         INTEGER
 );
 
 INSERT INTO engineers
-  (full_name, worked_yesterday, worked_today, workingLimitReached)
+  (name, shifts_worked)
 VALUES
-  ('Malinda Mannion', false, false, false),
-  ('Bud Bjork', false, false, false),
-  ('Jarrett Jett', false, false, false),
-  ('Cassaundra Couts', false, false, false),
-  ('Ashli Applebee', false, false, false),
-  ('Myrtice Manfre', false, false, false),
-  ('Eugenie Etherton', false, false, false),
-  ('Madge Mcginty', false, false, false),
-  ('Assunta Austin', false, false, false),
-  ('Madlyn Moncada', false, false, false);
+  ('Malinda Mannion', 0),
+  ('Bud Bjork', 0),
+  ('Jarrett Jett', 0),
+  ('Cassaundra Couts', 0),
+  ('Ashli Applebee', 0),
+  ('Myrtice Manfre', 0),
+  ('Eugenie Etherton', 0),
+  ('Madge Mcginty', 0),
+  ('Assunta Austin', 0),
+  ('Madlyn Moncada', 0);
 
 COMMIT;
