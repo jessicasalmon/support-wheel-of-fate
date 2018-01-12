@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import '../App.css';
 import getEngineers from '../requests/getEngineers.js';
 import updateEngineers from '../requests/updateEngineers.js';
+
+import morning from '../assets/sunrise.svg';
+import afternoon from '../assets/sunset.svg';
 
 class App extends Component {
 
@@ -99,10 +101,10 @@ class App extends Component {
     shiftsTodayCopy.push(shifts.morning);
     shiftsTodayCopy.push(shifts.afternoon);
 
-
     this.setState({
       engineers: engineersObj,
-      shiftToday: shiftsTodayCopy
+      shiftToday: shiftsTodayCopy,
+      shiftYesterday: this.state.shiftToday
     }, () => {
       this.updateDBEngineers();
     });
@@ -114,15 +116,44 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.state.engineers, 'engineers in state')
+    console.log(this.state, 'engineers in state')
     return (
-      <div className="app-container">
-        <p>{this.state.shiftToday[0]}</p>
-        <p>{this.state.shiftToday[1]}</p>
-        <div
-        onClick={() => this.selectTodaysEngineers()}
-        style={{backgroundColor: "pink", padding: "1em", width: "50%"}}>Assign Engineers</div>
+      <div className="app-container w-100 mt0 white">
+        <section className="flex flex-column flex-row-ns pa3 items-center justify-between">
+          <h1 className="f3 mv0-ns ttu bb bw1 b--white">Shift Selector</h1>
+          <div
+          onClick={() => this.selectTodaysEngineers()}
+          className="grow f4 pv3 pa3 bg-black-30 tc pointer br3 ttu b">
+            Pick Engineers
+          </div>
+        </section>
+
+        <section className="mt5-ns mt2 flex flex-column flex-row-ns">
+          <div className="w-50-ns flex flex-column items-center">
+            <header className="f2 pv3">AM</header>
+              <img className={`${new Date().getHours() >= 8 & new Date().getHours() < 13 ? 'animation' : ''} w-50`} src={morning}></img>
+            <p className="f3">{this.state.shiftToday[0]}</p>
+          </div>
+          <div className="w-50-ns flex flex-column items-center">
+            <header className="f2 pv3">PM</header>
+              <img className={`${new Date().getHours() >= 13 ? 'animation' : ''} w-50`} src={afternoon}></img>
+            <p className="f3">{this.state.shiftToday[1]}</p>
+          </div>
+        </section>
+        {
+          this.state.shiftYesterday && this.state.shiftYesterday.length > 0 &&
+          <section className="mt5-ns mt2 flex-column dn db-ns">
+          <div className="flex items-center justify-center">
+            <h2 className="w-third pa3 br3 bg-black-30 tc">Yesterdays Shift</h2>
+          </div>
+          <div className="flex items-center justify-center">
+            <p className="w-third tr pr3 flex items-center justify-end"><span className="f4 b">AM &nbsp;</span>{ this.state.shiftYesterday[0]}</p>
+            <p className="w-third pl3 flex items-center"><span className="f4 b">PM &nbsp;</span>{ this.state.shiftYesterday[1]}</p>
+          </div>
+          </section>
+        }
       </div>
+
     );
   }
 }
