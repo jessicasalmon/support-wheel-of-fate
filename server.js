@@ -1,10 +1,15 @@
 const express = require('express');
 const app = express();
 
+const path = require('path');
 const bodyParser = require('body-parser');
 
 const getEngineers = require('./database/queries/getEngineers.js');
 const updateEngineers = require('./database/queries/updateEngineers.js');
+
+if (process.env.NODE_ENV === 'test') {
+  require('env2')('config-test.env');
+}
 
 app.use(bodyParser.json());
 
@@ -41,6 +46,11 @@ app.post('/engineers/update', (req, res) => {
       })
     }
   })
+});
+
+app.use('/jessicasalmon/support-wheel-of-fate/', express.static(path.resolve(__dirname, './build')));
+app.get('/*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, './build', 'index.html'));
 });
 
 module.exports = app;
