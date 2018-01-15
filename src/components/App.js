@@ -27,7 +27,9 @@ class App extends Component {
     // set state to be same as in database
     getEngineers.then((data) => {
       this.setState({
-        engineers: data
+        engineers: data.engineers,
+        shiftToday: data.shiftToday,
+        shiftYesterday: data.shiftYesterday
       })
     })
     .catch((err) => {
@@ -45,7 +47,7 @@ class App extends Component {
       shiftToday: updatedEngineers.shiftToday,
       shiftYesterday: this.state.shiftToday
     }, () => {
-      updateEngineers(this.state.engineers);
+      updateEngineers(this.state.engineers, this.state.shiftToday, this.state.shiftYesterday);
     });
   }
 

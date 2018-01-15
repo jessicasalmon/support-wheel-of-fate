@@ -15,12 +15,15 @@ test('/engineers route should return a status of 200 and correct data', t => {
   .expect(200)
   .expect('Content-Type', /json/)
   .end((err, res) => {
+
+    const expected = ['engineers', 'shiftToday', 'shiftYesterday'];
     const actual = res.body;
+
     if(err) {
       t.error(err, 'tested for errors')
     }
     else {
-      t.same(actual.length, expected, 'Results as expected')
+      t.same(Object.keys(actual), expected, 'Results as expected')
     }
   });
 });
