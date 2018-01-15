@@ -5,7 +5,7 @@ const data = require('../lib/data.js');
 
 test('updateEngineers query should return correct data from the database', t => {
   t.plan(1);
-    const engineer = data.updatedEngineers;
+    const engineer = data.updatedEngineers.engineers;
 
     updateEngineers(engineer, (err, engineers) => {
       const actual = engineers.rowCount;

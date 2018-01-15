@@ -9,7 +9,7 @@ test('getEngineers query should return correct data from the database', t => {
     const actual = engineers.length;
     const expected = 10;
 
-    if(err){
+    if (err) {
       t.error(err);
     }
     else {

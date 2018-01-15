@@ -1,9 +1,9 @@
-const updateEngineers = (engineers) => {
+const updateEngineers = (engineers, shiftToday, shiftYesterday) => {
   return new Promise((resolve, reject) => {
 
     fetch('/engineers/update', {
       method: 'post',
-      body: JSON.stringify(engineers),
+      body: JSON.stringify({ engineers, shiftToday, shiftYesterday}),
       credentials: 'include',
       headers: {
         Accept: 'application/json',
