@@ -11,7 +11,7 @@
     "test-backend": "NODE_ENV=test node test/runner.js | tap-spec",
     "test-client": "react-scripts test --env=jsdom",
     "test": "CI=true npm run test-client && npm run test-backend",
-    "build-local-db": "node database/build/db_build.js",
+    "build-local-db": "NODE_ENV=test node database/build/db_build.js",
     "eject": "react-scripts eject",
     "build": "react-scripts build",
     "heroku-postbuild": "npm install && npm install --only=dev --no-shrinkwrap && npm run build"

@@ -4,6 +4,7 @@ const environment = require('env2');
 let options;
 
 if (process.env.NODE_ENV === 'test') {
+
   options = {
     database: 'support-wheel-of-fate'
   }
@@ -31,6 +32,5 @@ if (process.env.NODE_ENV === 'production') {
     options.password = password;
   }
 }
-
 
 module.exports = new Pool(options);
