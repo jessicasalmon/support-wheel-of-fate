@@ -1,4 +1,4 @@
-# Support Wheel Of Fate
+# [Support Wheel Of Fate](https://which-engineer-is-it-anyway.herokuapp.com/)
 
 ## What is it?
 An app to assign engineers to support roles and see who's on support today.
@@ -32,7 +32,7 @@ git clone https://github.com/jessicasalmon/support-wheel-of-fate.git
 cd support-wheel-of-fate
 npm i
 npm dev-start // starts the app
-npm test // runs the tests ADD TEST SCRIPT
+npm test // runs the tests
 npm run build-local-db // build the database
 ```
 
@@ -42,3 +42,6 @@ Some ideas for how I'd extend the project if building out into a product
 - Rota: set support shifts in advance
 - Swap shifts: not a good day to be on support? Or perhaps you're sick. No worries, swap your shift with a friendly co-worker :smile:
 - Future/past views: different views for people: working today, this whole week, next two weeks and the past
+
+
+View the live site [here](https://which-engineer-is-it-anyway.herokuapp.com/).
