@@ -10,7 +10,7 @@
     "dev-start": "concurrently \"npm run start-server\" \"npm run start-client\" ",
     "test-backend": "NODE_ENV=test node test/runner.js | tap-spec",
     "test-client": "react-scripts test --env=jsdom",
-    "test": "",
+    "test": "CI=true npm run test-client && npm run test-backend",
     "build-local-db": "node database/build/db_build.js",
     "eject": "react-scripts eject",
     "build": "react-scripts build",
