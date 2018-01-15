@@ -38,7 +38,6 @@ class App extends Component {
 
   selectTodaysEngineers = () => {
     let eligibleEngineersList = filterEligibleEngineers(this.state.engineers, this.state.shiftToday);
-
     let updatedEngineers = todaysEngineers(eligibleEngineersList, this.state.engineers);
 
     this.setState({
@@ -51,7 +50,6 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.state, 'engineers in state')
     return (
       <div className="app-container w-100 mt0 white">
         <Header

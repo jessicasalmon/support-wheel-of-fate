@@ -21,7 +21,7 @@ const filterEligibleEngineers = (allEngineers, shiftToday) => {
       return rules;
     }
   }
-
+  
   return allEngineers.filter(meetsCriteria);
 };
 
