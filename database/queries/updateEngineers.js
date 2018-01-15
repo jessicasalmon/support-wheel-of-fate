@@ -1,7 +1,6 @@
 const pool = require('../build/db_connect');
 
 const updateEngineers = (engineer, callback) => {
-console.log(engineer, 'engineer from frontend <<<<<<> >>>>>')
   const query = `INSERT INTO engineers (
     name,
     shifts_worked
@@ -19,7 +18,6 @@ console.log(engineer, 'engineer from frontend <<<<<<> >>>>>')
   ($19,$20)
   ON CONFLICT (name) DO UPDATE SET shifts_worked = EXCLUDED.shifts_worked`;
 
-  console.log(engineer[0].name, 'eng name')
 
   const params = [
     engineer[0].name,
@@ -46,11 +44,9 @@ console.log(engineer, 'engineer from frontend <<<<<<> >>>>>')
 
   pool.query(query, params, (err, res) => {
     if(err) {
-      console.log(err, 'error in query');
       return callback(err);
     }
     else {
-      console.log(res, '<<<<<<Res')
       return callback(null, res);
     }
   })

@@ -1,6 +1,5 @@
 import selectTodaysEngineers from '../../helpers/selectTodaysEngineers';
 
-
 describe('selectTodaysEngineers function', () =>{
   test('returned info follows the rules', () => {
 
@@ -35,7 +34,7 @@ describe('selectTodaysEngineers function', () =>{
 
     const result = selectTodaysEngineers(eligibleEngineersList, engineersState);
     expect(result.shiftToday).not.toEqual(expect.arrayContaining(ineligibleEngineers))
-    expect(result.shiftToday).not.toEqual(result.shiftToday[1]);
+    expect(result.shiftToday[0]).not.toEqual(result.shiftToday[1]);
     expect(result.engineers.length).toEqual(10);
   })
 });

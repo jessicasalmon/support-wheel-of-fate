@@ -32,7 +32,7 @@ class App extends Component {
     })
     .catch((err) => {
       // would usually alert the user to the error here
-      console.log(err, 'error occured whilst fetching data');
+      console.error(err, 'error occured whilst fetching data');
     });
   }
 

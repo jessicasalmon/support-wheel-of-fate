@@ -16,10 +16,7 @@ test('/engineers route should return a status of 200 and correct data', t => {
   .expect('Content-Type', /json/)
   .end((err, res) => {
     const actual = res.body;
-    console.log(expected, 'expectd <<<<<<<<')
-    console.log(actual, 'actual <<<<<<<<')
     if(err) {
-      console.log(err, 'eng route error <<<')
       t.error(err, 'tested for errors')
     }
     else {

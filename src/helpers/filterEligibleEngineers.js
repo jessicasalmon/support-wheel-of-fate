@@ -9,7 +9,7 @@ const filterEligibleEngineers = (allEngineers, shiftToday) => {
       return rules;
     }
   } // all engineers reached the 2 shift limit, reset the shifts_worked count
-  else if(allEngineers.every(eng => eng.shifts_worked === 2)) {
+  else if (allEngineers.every(eng => eng.shifts_worked === 2)) {
     return allEngineers.map(engineer => {
       engineer.shifts_worked = 0;
       return engineer;
@@ -21,7 +21,7 @@ const filterEligibleEngineers = (allEngineers, shiftToday) => {
       return rules;
     }
   }
-  
+
   return allEngineers.filter(meetsCriteria);
 };
 

@@ -13,10 +13,11 @@ if (process.env.NODE_ENV === 'test') {
 
 app.use(bodyParser.json());
 
+// ideally, we would split these calls into smaller modules
+// as we only have a couple of API calls, I've left it in here. 
 app.get('/engineers', (req, res) => {
   getEngineers((err, engineer) => {
     if(err) {
-      console.log(err, '<<< ERROR')
       return res.status(500).json({
         type: 500,
         message: 'error from server'
@@ -29,7 +30,6 @@ app.get('/engineers', (req, res) => {
 });
 
 app.post('/engineers/update', (req, res) => {
-  console.log('you are in hereeee');
   const engineers = req.body;
   updateEngineers(engineers, (err, response) => {
     if (err) {

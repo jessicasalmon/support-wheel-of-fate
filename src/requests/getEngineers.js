@@ -13,7 +13,7 @@ const getEngineers = new Promise((resolve, reject) => {
     return resolve(data);
   })
   .catch((error) => {
-    console.log('error occurred fetching data')
+    return reject(error);
   });
 });
 
