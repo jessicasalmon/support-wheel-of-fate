@@ -6,9 +6,10 @@ import updateEngineers from '../requests/updateEngineers.js';
 import PickEngineers from './PickEngineers';
 import YesterdaysEngineers from './YesterdaysEngineers';
 import TodaysEngineers from './TodaysEngineers';
+import Header from './Header';
 
-// import selectTodaysEngineers from '../helpers/selectTodaysEngineers';
 import filterEligibleEngineers from '../helpers/filterEligibleEngineers';
+import todaysEngineers from '../helpers/selectTodaysEngineers';
 
 class App extends Component {
 
@@ -16,7 +17,7 @@ class App extends Component {
     super(props);
 
     this.state = {
-     shiftYesterday: [], // remeber to sync up with db
+     shiftYesterday: [],
      shiftToday: [],
      engineers: []
     }
@@ -30,77 +31,34 @@ class App extends Component {
       })
     })
     .catch((err) => {
-      console.log(err, 'error occured whilst fetching data')
+      // would usually alert the user to the error here
+      console.log(err, 'error occured whilst fetching data');
     });
   }
 
   selectTodaysEngineers = () => {
     let eligibleEngineersList = filterEligibleEngineers(this.state.engineers, this.state.shiftToday);
 
-    let engineers = eligibleEngineersList.map(engineer => {
-      return engineer.name
-    });
-
-    let shifts = {
-      morning: null,
-      afternoon: null
-    }
-
-    let selectFirstEngineer = engineers[Math.floor(Math.random() * engineers.length)]
-    shifts.morning = selectFirstEngineer;
-
-    if(shifts.morning) {
-      // remove that key from the engineers array
-      const morningEng = engineers.indexOf(shifts.morning);
-      if (morningEng !== -1) {
-        engineers.splice(morningEng, 1)
-      }
-      // // then run the function again and assign to shifts.afernoon
-      let selectSecondEngineer = engineers[Math.floor(Math.random() * engineers.length)];
-      shifts.afternoon = selectSecondEngineer;
-    }
-
-    let engineersObj = this.state.engineers.slice(0);
-
-    // update the shifts for morning and afternoon
-    if (shifts.morning !== '' && shifts.afternoon !== '') {
-      Object.keys(engineersObj).forEach((key) => {
-        if(engineersObj[key].name === shifts.morning) {
-          engineersObj[key].shifts_worked += 1;
-         }
-        if (engineersObj[key].name === shifts.afternoon) {
-          engineersObj[key].shifts_worked += 1;
-        }
-      });
-    };
-
-
-    let shiftsTodayCopy = [];
-    shiftsTodayCopy.push(shifts.morning);
-    shiftsTodayCopy.push(shifts.afternoon);
+    let updatedEngineers = todaysEngineers(eligibleEngineersList, this.state.engineers);
 
     this.setState({
-      engineers: engineersObj,
-      shiftToday: shiftsTodayCopy,
+      engineers: updatedEngineers.engineers,
+      shiftToday: updatedEngineers.shiftToday,
       shiftYesterday: this.state.shiftToday
     }, () => {
-      this.updateDBEngineers();
+      updateEngineers(this.state.engineers);
     });
-  }
-
-  updateDBEngineers = () => {
-    let updatedEngineers = this.state.engineers;
-    updateEngineers(updatedEngineers);
   }
 
   render() {
     console.log(this.state, 'engineers in state')
     return (
       <div className="app-container w-100 mt0 white">
-        <section className="flex flex-column flex-row-ns pa3 items-center justify-between">
-          <h1 className="f3 mv0-ns ttu bb bw1 b--white">Shift Selector</h1>
-          <PickEngineers selectTodaysEngineers = {this.selectTodaysEngineers} />
-        </section>
+        <Header
+          title='Shift Selector'
+          PickEngineers={ PickEngineers }
+          selectTodaysEngineers = { this.selectTodaysEngineers }
+          />
 
         <TodaysEngineers shiftToday={this.state.shiftToday} />
 
