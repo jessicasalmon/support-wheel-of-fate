@@ -31,7 +31,7 @@ Follow these steps to get the project running on your local machine
 git clone https://github.com/jessicasalmon/support-wheel-of-fate.git
 cd support-wheel-of-fate
 npm i
-npm dev-start // starts the app
+npm run dev-start // starts the app
 npm test // runs the tests
 ```
 ## Set up the database
