@@ -33,8 +33,19 @@ cd support-wheel-of-fate
 npm i
 npm dev-start // starts the app
 npm test // runs the tests
-npm run build-local-db // build the database
 ```
+## Set up the database
+1) create a database called `support-wheel-of-fate`
+
+2) create a config-test.env file and put the following key in there
+
+```
+export DATABASE_URL='postgres://yourusername:@localhost:5432/support-wheel-of-fate'
+```
+
+3) build the database
+```
+npm run build-local-db ```
 
 ## Roadmap
 Some ideas for how I'd extend the project if building out into a product
