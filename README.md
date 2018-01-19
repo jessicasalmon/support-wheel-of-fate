@@ -45,7 +45,8 @@ export DATABASE_URL='postgres://yourusername:@localhost:5432/support-wheel-of-fa
 
 3) build the database
 ```
-npm run build-local-db ```
+npm run build-local-db 
+```
 
 ## Roadmap
 Some ideas for how I'd extend the project if building out into a product
